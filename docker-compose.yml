@@ -1,11 +1,35 @@
 version: '3.8'
+
 services:
-  app:
+  suivi:
     build: .
-    ports:
-      - "3000:3000"
+    container_name: suivi-app
+    restart: unless-stopped
+    
+    # Variables d'environnement (ajustez selon vos besoins)
     environment:
-      - NODE_ENV=production
+      - TZ=Europe/Paris
+      - PYTHONUNBUFFERED=1
+      # Ajoutez ici vos clés API si nécessaire
+      # - DHL_API_KEY=votre_cle
+      # - LAPOSTE_API_KEY=votre_cle
+      # - DEEPL_API_KEY=votre_cle
+    
+    # Volumes pour la persistance des données
     volumes:
       - ./data:/app/data
+      - ./config:/app/config
+    
+    # Si l'application a une interface web
+    # ports:
+    #   - "8080:8080"
+    
+    # Politique de redémarrage
     restart: unless-stopped
+    
+    # Limites de ressources (optionnel)
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M

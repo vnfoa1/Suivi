@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-# Installer git, wget et Chromium
+# Installer git, wget, Chromium et ChromeDriver
 RUN apt-get update && apt-get install -y \
     git \
     wget \
@@ -10,10 +10,8 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copier requirements.txt et installer
+# Copier requirements et installer Python dependencies
 COPY requirements.txt .
-
-# Installer les packages Python, retirer pywin32 pour Linux
 RUN pip install --no-cache-dir \
     pygoogletranslation>=2.0.6 \
     google-cloud-translate>=3.6.1 \

@@ -1,37 +1,31 @@
+# Utiliser Python 3.11 slim pour réduire la taille
 FROM python:3.11-slim
 
-# Installer git, wget, Chromium et ChromeDriver
+# Installer les dépendances système nécessaires
 RUN apt-get update && apt-get install -y \
     git \
-    wget \
-    chromium \
-    chromium-driver \
     && rm -rf /var/lib/apt/lists/*
 
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier requirements et installer Python dependencies
+# Copier les fichiers de dépendances
 COPY requirements.txt .
-RUN pip install --no-cache-dir \
-    pygoogletranslation>=2.0.6 \
-    google-cloud-translate>=3.6.1 \
-    langid>=1.1.6 \
-    lxml>=4.6.3 \
-    Pillow>=9.0.0 \
-    psutil>=5.8.0 \
-    PySimpleGUI>=4.60.0 \
-    python-dateutil>=2.8.1 \
-    pytz>=2021.3 \
-    requests>=2.26.0 \
-    retry>=0.9.2 \
-    selenium>=4.1.0 \
-    timeago>=1.0.15 \
-    tzlocal>=4.1 \
-    git+https://github.com/sebdelsol/undetected-chromedriver@master
 
-# Copier le projet
+# Installer les dépendances Python
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copier tout le code source
 COPY . .
 
-EXPOSE 5000
+# Créer un répertoire pour les données persistantes
+RUN mkdir -p /app/data
 
+# Exposer le port si l'application en utilise un
+# EXPOSE 8080
+
+# Variable d'environnement pour la configuration
+ENV PYTHONUNBUFFERED=1
+
+# Commande de démarrage
 CMD ["python", "suivi.py"]
